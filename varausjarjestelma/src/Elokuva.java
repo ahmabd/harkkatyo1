@@ -1,10 +1,11 @@
 
-public class Elokuva {
+public class Elokuva{
 
 	private String nimi;
+	//minuuteissa
 	private int kesto;
 	//testaukseen
-	private boolean verbose = true;
+	private boolean verbose = false;
 
 	//konstruktori
 	public Elokuva(String nimi, int kesto){
