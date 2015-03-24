@@ -16,6 +16,8 @@ public class Teatteri {
 
 		this.nimi = nimi;
 		this.paikkakunta = paikkakunta;
+		
+		
 
 		//luodaan salit teatterille		
 		alustaSalit(salimaara);
@@ -88,20 +90,24 @@ public class Teatteri {
 	}
 	/**
 	 * Lisää uuden salin muiden perään
+	 * @param rivit
+	 * @param sarakkeet
 	 */
-	public void lisaaSali(){
+	public void lisaaSali(int rivit, int sarakkeet){
 		if(verbose){System.out.println("Luokka: Teatteri : lisaaSali()");}
 
-		salit.add(new Sali(salit.size()+1));
+		salit.add(new Sali(salit.size()+1, rivit, sarakkeet, nimi, paikkakunta));
 
 	}
 
 	/**
 	 * Lisää salin tiettyyn kohtaan listaa. Tarkistaa dublikaatit, jos löytyy palauttaa false
-	 * @param salinumero
+	 * @param salinumero : int
+	 * @param rivit : int
+	 * @param sarakkeet : int
 	 * @return boolean
 	 */
-	public boolean lisaaSali(int salinumero){
+	public boolean lisaaSali(int salinumero, int rivit, int sarakkeet){
 		if(verbose){System.out.println("Luokka: Teatteri : lisaaSali() - int: "+salinumero);}
 
 		//tarkistaa ettei tule dublikaatteja
@@ -110,18 +116,19 @@ public class Teatteri {
 				return false;
 			}
 		}		
-		salit.add(salinumero-1, new Sali(salinumero));
+		salit.add(salinumero-1, new Sali(salinumero, rivit, sarakkeet, nimi, paikkakunta));
 		return true;
 	}
 
 	/**
-	 * poistaa vanhat salit ja alustaa uusilla saleilla
+	 * poistaa vanhat salit ja alustaa uusilla saleilla. Asettaa katsomoksi 1x1
+	 * @param salimaara
 	 */
 	private void alustaSalit(int salimaara){
 		if(verbose){System.out.println("Luokka: Teatteri : alustaSalit() - int: "+salimaara);}
 		salit = new ArrayList<Sali>();
 		for(int i = 0 ; i< salimaara; i++){
-			salit.add(new Sali(i+1));
+			salit.add(new Sali(i+1,1,1,nimi, paikkakunta));
 		}
 	}
 
