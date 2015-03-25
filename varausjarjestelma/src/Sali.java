@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Sali {
 	//testaukseen
-	private boolean verbose = false;
+	private boolean verbose = true;
 	private boolean tulostapaikat = false;
 
 	private int salinumero;
@@ -14,11 +14,19 @@ public class Sali {
 	private String[][] istumapaikat;
 	private String  teatterinNimi;
 	private String teatterinPaikkakunta;
-	private ArrayList<Naytos>[] naytokset;
+	private ArrayList<ArrayList<Naytos>> naytokset;
 	//onko katsomon koko määrittämättä
 	boolean kesken;
 
 	//konstruktori
+	/**
+	 * Konstruktori
+	 * @param salinumero : int
+	 * @param rivit : int
+	 * @param sarakkeet : int
+	 * @param teatterinNimi : String
+	 * @param teatterinPaikkakunta : String
+	 */
 	public Sali(int salinumero, int rivit, int sarakkeet, String teatterinNimi, String teatterinPaikkakunta){
 		if(verbose){System.out.println("Luokka: Sali : konstruktori");}
 
@@ -35,7 +43,7 @@ public class Sali {
 		}
 		alustaPaikat();
 		alustaNaytokset();
-			
+
 	}
 
 
@@ -69,7 +77,7 @@ public class Sali {
 	}
 
 	/**
-	 * palauttaa teatterin istumapaikat
+	 * palauttaa salin istumapaikat
 	 * @return : String[][]
 	 */
 	public String[][] annaIstumapaikat(){
@@ -81,19 +89,21 @@ public class Sali {
 	 * palauttaa kaikki salin näytökset
 	 * @return ArrayList<Naytos>[]
 	 */
-	public ArrayList<Naytos>[] annaKaikkiNaytokset(){
+	public ArrayList<ArrayList<Naytos>> annaKaikkiNaytokset(){
 		if(verbose){System.out.println("Luokka: Sali : annaIstumapaikat()");}
 		return naytokset;
 	}
-	
+
 	/** TODO testaa! 
 	 * palauttaa tietyn kellonajan näyökset, 1= klo 10, 2= klo 13, 3= klo 16, 4= klo 19, 5= klo 22
 	 * @param kellonaika
 	 * @return ArrayList<Naytos> tai null mikäli kellonaika ei ole 1-5
 	 */
 	public ArrayList<Naytos> annaNaytokset(int kellonaika){
+		if(verbose){System.out.println("Luokka: Sali : annaNaytokset()");}
+
 		if(kellonaika > 0 && kellonaika <6){
-			return naytokset[kellonaika];
+			return naytokset.get(kellonaika-1);
 		}else{
 			return null;
 		}
@@ -115,21 +125,44 @@ public class Sali {
 	//------------------------------------------------------------
 
 	/**
-	 * TODO tee!
+	 * TODO tee! 
 	 */
-	public void lisaaNaytos(){
+	public boolean  lisaaNaytos(Naytos naytos){
+		if(verbose){System.out.println("Luokka: Sali : lisaaNaytos()");}
+
+		//kertoo voidaanko esitys lisätä
+		boolean voidaanLisata = true;
+		//tarkastetaan onko samana päivänä samaan aikaan jo näytös. naytokset : ArrayList<ArrayList<Naytos>> : *näytöspaikat*<*samanaikaisetnäytökset*>
+		int naytosPaikka = naytos.annaNaytosPaikka();
 		
+		for(int i=0; i<naytokset.get(naytosPaikka-1).size(); i++){
+			//jos näytöspaikka ei ole tyhjä ja näytöspaikan näytöksistä jollain on sama päivämäärä
+			if(naytokset.get(naytosPaikka-1).get(i) != null && naytokset.get(naytosPaikka-1).get(i).annaPvm() == naytos.annaPvm()){
+				if(verbose){System.out.println("Luokka: Sali : lisaaNaytos() - salissa on jo näytös samaan aikaan-> ei voida lisätä!");}
+				//ei voida lisätä
+				voidaanLisata = false;
+				break;
+			}
+		}
+		if(voidaanLisata){		
+			naytokset.get(naytosPaikka-1).add(naytos);
+			return true;
+		}
+		return false;		
 	}
 	/**
 	 * Alustaa näytöspaikat ArrayList<Naytos> olioilla
 	 */
 	private void alustaNaytokset(){
-		naytokset = new ArrayList[5];
-		for(int i=0; i<naytokset.length; i++){
-			naytokset[i] = new ArrayList<Naytos>();
+		if(verbose){System.out.println("Luokka: Sali : alustaNaytokset()");}
+
+		naytokset = new ArrayList<ArrayList<Naytos>>();
+		for(int i=0; i<5; i++){
+			naytokset.add(new ArrayList<Naytos>());
+
 		}
 	}
-	
+
 	public boolean onkoKesken(){
 		if(verbose){System.out.println("Luokka: Sali : onkoKesken()");}
 		return kesken;
@@ -180,7 +213,7 @@ public class Sali {
 		}
 
 	}
-	
+
 	public String toString(){
 		if(verbose){System.out.println("Luokka: Sali : toString()");}
 		return("Salinumero: "+salinumero+

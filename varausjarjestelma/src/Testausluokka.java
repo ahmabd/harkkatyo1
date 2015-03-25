@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -124,17 +125,58 @@ public class Testausluokka {
 		for(int i=0; i<teatteri1.annaSalit().size();i++){
 			print(teatteri1.annaSali(i+1).toString());
 		}
-	
 		
+		//-----------------------------------------------------------------------------------------		
 		
 		//Näytös-testi
+		
+		boolean lisays;
+		
 		//konstruktori
-		//print("Luodaan Naytos-olio 'naytos'")
+		//näytöksien ajankohdat ovat: 1-10:00 - 2-13:00 - 3-16:00 - 4-19:00 - 5-22:00
+		print("\nLuodaan Naytos-olio 'naytos', teatteri1:n saliin no 3 kello 10. Pvm = 24.3.2015. Elokuvana on 'Hessu Hermanni'");
+		Naytos naytos = new Naytos(2015, 3, 24, teatteri1.annaSali(3).annaIstumapaikat(), 3, teatteri1, elokuva, 5 );
+		//getterit
+		print("näytöksen tiedot ovat: ");
+		print("Päivämäärä: " +naytos.annaPvm().get(Calendar.DATE)
+				+"."+naytos.annaPvm().get(Calendar.MONTH)
+				+"."+naytos.annaPvm().get(Calendar.YEAR));
+		print("näytös on teatterissa: \n"+naytos.annaTeatteri().toString());
+		print("näytös on salissa: "+naytos.annaSali());
+		print("näytös alkaa klo: "+naytos.annaAika());
+		print("elokuvana on: "+elokuva.toString());
+		//tulostapaikat
+		print("varaustilanne on: " );
+		naytos.tulostaPaikat();
+		print("naytoksen tiedot kootusti: ");
+		print(naytos.toString());
 		
-	
+		//SALI-luokan lisääNäytös - metodi
+		print("lisätään näytös teatteri1:n sali 3:n ja 2:n tietoihin");
+		lisays = teatteri1.annaSali(3).lisaaNaytos(naytos);
+		onnistuiko(lisays);
+		lisays = teatteri1.annaSali(2).lisaaNaytos(naytos);
+		onnistuiko(lisays);
+		print("Koitetaan lisätä sama näytös uudelleen saliin 3");
+		lisays = teatteri1.annaSali(3).lisaaNaytos(naytos);
+		onnistuiko(lisays);
 		
+		
+		//setterit
+		//print("muutetaan näytöksen tietoja. Koska voidaan.");		
 		
 	}
 	
+	/**
+	 * Ilmoittaa onnistuiko esityksen lisääminen tiettyyn saliin tietylle paikalle
+	 * @param lisays
+	 */
+	public static void onnistuiko(boolean lisays){
+		if(lisays){
+			print("Lisäys onnistui!");
+		}else{
+			print("lisäys ei onnistunut, salissa jo näytös samaan aikaan!");
+		}
+	}
 
 }
