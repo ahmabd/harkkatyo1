@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Sali {
 	//testaukseen
-	private boolean verbose = true;
+	private boolean verbose = false;
 	private boolean tulostapaikat = false;
 
 	private int salinumero;
