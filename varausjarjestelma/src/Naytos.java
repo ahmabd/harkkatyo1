@@ -7,7 +7,7 @@ import java.util.GregorianCalendar;
 
 
 public class Naytos{
-	private boolean verbose = true;
+	private boolean verbose = false;
 
 	private String[][] istumapaikat;
 	private Calendar pvm;
