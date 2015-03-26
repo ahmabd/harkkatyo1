@@ -75,7 +75,7 @@ public class GUI {
 		tabbedPane.addTab("Etusivu", null, panel, null);
 		panel.setLayout(null);
 		
-		JLabel lblElokuvat = new JLabel("Elokuvat");
+		JLabel lblElokuvat = new JLabel("Elokuvat:");
 		lblElokuvat.setBounds(6, 12, 54, 16);
 		panel.add(lblElokuvat);
 		
@@ -84,7 +84,7 @@ public class GUI {
 		panel.add(textField);
 		textField.setColumns(10);
 		
-		JLabel lblElokuvateatteri = new JLabel("Elokuvateatteri");
+		JLabel lblElokuvateatteri = new JLabel("Elokuvateatteri:");
 		lblElokuvateatteri.setBounds(222, 12, 101, 16);
 		panel.add(lblElokuvateatteri);
 		
