@@ -4,11 +4,16 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
+
 import java.awt.BorderLayout;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
 import java.awt.Font;
 import java.awt.FlowLayout;
+
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -17,18 +22,17 @@ import javax.swing.JSeparator;
 import javax.swing.JFormattedTextField;
 import javax.swing.JEditorPane;
 
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JList;
+
 public class GUI {
 
 	private JFrame Kirjaudu;
-	private JTextField textField;
-	private JTextField textField_1;
 	private JTextField textField_2;
 	private JPasswordField passwordField;
 	private JTextField textField_3;
 	private JPasswordField passwordField_1;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
 
 	/**
 	 * Launch the application.
@@ -76,29 +80,39 @@ public class GUI {
 		panel.setLayout(null);
 		
 		JLabel lblElokuvat = new JLabel("Elokuvat:");
-		lblElokuvat.setBounds(6, 12, 54, 16);
+		lblElokuvat.setBounds(20, 12, 81, 16);
 		panel.add(lblElokuvat);
 		
-		textField = new JTextField();
-		textField.setBounds(6, 40, 207, 283);
-		panel.add(textField);
-		textField.setColumns(10);
-		
 		JLabel lblElokuvateatteri = new JLabel("Elokuvateatteri:");
-		lblElokuvateatteri.setBounds(222, 12, 101, 16);
+		lblElokuvateatteri.setBounds(232, 12, 101, 16);
 		panel.add(lblElokuvateatteri);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(225, 40, 199, 283);
-		panel.add(textField_1);
-		textField_1.setColumns(10);
+		JList list = new JList();
+		list.setBounds(20, 40, 184, 251);
+		panel.add(list);
+		
+		JList list_1 = new JList();
+		list_1.setBounds(232, 40, 184, 251);
+		panel.add(list_1);
+		
+		JButton btnPivitElokuvat = new JButton("P\u00E4ivit\u00E4 Elokuvat");
+		btnPivitElokuvat.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnPivitElokuvat.setBounds(20, 324, 184, 29);
+		panel.add(btnPivitElokuvat);
+		
+		JButton btnPivitElokuvateatterit = new JButton("P\u00E4ivit\u00E4 Elokuvateatterit");
+		btnPivitElokuvateatterit.setBounds(232, 324, 184, 29);
+		panel.add(btnPivitElokuvateatterit);
 		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Varaa Lippu", null, panel_1, null);
 		panel_1.setLayout(null);
 		
 		JLabel lblValitseTeatteri = new JLabel("Teatteri:");
-		lblValitseTeatteri.setBounds(6, 52, 116, 16);
+		lblValitseTeatteri.setBounds(16, 52, 116, 16);
 		panel_1.add(lblValitseTeatteri);
 		
 		JLabel lblValitseElokuva = new JLabel("Elokuva:");
@@ -106,31 +120,33 @@ public class GUI {
 		panel_1.add(lblValitseElokuva);
 		
 		JLabel lblVytsaika = new JLabel("N\u00E4yt\u00F6saika:");
-		lblVytsaika.setBounds(343, 52, 116, 16);
+		lblVytsaika.setBounds(332, 52, 116, 16);
 		panel_1.add(lblVytsaika);
 		
 		JLabel lblValitse = new JLabel("Valitse:");
-		lblValitse.setBounds(6, 24, 61, 16);
+		lblValitse.setBounds(16, 23, 61, 16);
 		panel_1.add(lblValitse);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(6, 90, 134, 177);
-		panel_1.add(textField_4);
-		textField_4.setColumns(10);
-		
-		textField_5 = new JTextField();
-		textField_5.setBounds(171, 94, 134, 173);
-		panel_1.add(textField_5);
-		textField_5.setColumns(10);
-		
-		textField_6 = new JTextField();
-		textField_6.setBounds(343, 94, 134, 173);
-		panel_1.add(textField_6);
-		textField_6.setColumns(10);
-		
 		JButton btnVaraa = new JButton("Varaa");
+		btnVaraa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Lippu varattu!!");
+			}
+		});
 		btnVaraa.setBounds(16, 290, 117, 29);
 		panel_1.add(btnVaraa);
+		
+		JList list_2 = new JList();
+		list_2.setBounds(16, 94, 134, 173);
+		panel_1.add(list_2);
+		
+		JList list_3 = new JList();
+		list_3.setBounds(171, 94, 134, 173);
+		panel_1.add(list_3);
+		
+		JList list_4 = new JList();
+		list_4.setBounds(332, 94, 134, 173);
+		panel_1.add(list_4);
 		
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("Kirjaudu", null, panel_2, null);
