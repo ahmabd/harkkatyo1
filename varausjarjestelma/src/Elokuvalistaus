@@ -1,0 +1,84 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
+
+public class Elokuvalistaus extends JPanel {
+
+Elokuva elokuvalista[] = {
+      new Elokuva("Titanic", 1),
+      new Elokuva("Frozen", 2),
+      new Elokuva("Harry Potter", 3),
+      new Elokuva("Fight club", 4),
+       };
+
+
+  private JList<Elokuva> list = new JList<>(elokuvalista);
+
+  public Elokuvalistaus() {
+    setLayout(new BorderLayout());
+    JButton button = new JButton("valitse");
+    button.addActionListener(new PrintListener());
+
+    list = new JList<>(elokuvalista);
+    list.setVisibleRowCount(4);
+    JScrollPane pane = new JScrollPane(list);
+
+    add(pane, BorderLayout.NORTH);
+    add(button, BorderLayout.SOUTH);
+  }
+
+  public static void main(String s[]) {
+    JFrame frame = new JFrame("Elokuvat");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setContentPane(new Elokuvalistaus());
+    frame.pack();
+    frame.setVisible(true);
+  }
+
+  class PrintListener implements ActionListener {
+    public void actionPerformed(ActionEvent e) {
+      int selected[] = list.getSelectedIndices();
+      System.out.println("Valitut elokuvat:  ");
+
+      for (int i = 0; i < selected.length; i++) {
+        Elokuva element = (Elokuva) list.getModel()
+            .getElementAt(selected[i]);
+        System.out.println("  " + element.annaNimi());
+      }
+    }
+  }
+}
+
+class BookCellRenderer extends JLabel implements ListCellRenderer {
+  private static final Color HIGHLIGHT_COLOR = new Color(0, 0, 128);
+
+  public BookCellRenderer() {
+    setOpaque(true);
+    setIconTextGap(12);
+  }
+
+  public Component getListCellRendererComponent(JList list, Object value,
+      int index, boolean isSelected, boolean cellHasFocus) {
+    Elokuva entry = (Elokuva) value;
+    setText(entry.annaNimi());
+    if (isSelected) {
+      setBackground(HIGHLIGHT_COLOR);
+      setForeground(Color.white);
+    } else {
+      setBackground(Color.white);
+      setForeground(Color.black);
+    }
+    return this;
+  }
+}
