@@ -20,7 +20,7 @@ public class Naytos{
 
 
 
-	
+
 	/**
 	 * Konstruktori
 	 * @param vuosi : int
@@ -32,31 +32,28 @@ public class Naytos{
 	 * @param elokuva : Elokuva
 	 * @param aika : int
 	 */
-	public Naytos(int vuosi, int kuukausi, int paiva, String[][] istumapaikat, int sali, Teatteri teatteri, Elokuva elokuva, int aika){		
+	public Naytos(int vuosi, int kuukausi, int paiva, int sali, Teatteri teatteri, Elokuva elokuva, int aika){		
 		if(verbose){System.out.println("Luokka: Naytos : konstruktori");}
 
 		pvm = new GregorianCalendar();
 		pvm.set(vuosi, kuukausi, paiva);
-		
-	
-		this.istumapaikat = istumapaikat;
+
+
+		this.istumapaikat = teatteri.annaSali(sali).annaIstumapaikat();
 		this.salinumero = sali;
 		this.teatteri = teatteri;
 		this.elokuva = elokuva;
 		this.aika = aika;
 	}
 
-	public Naytos(){
-		
-	}
 
 
-	
+
 
 	//getterit & setterit
 	//----------------------------------------------------------------------------------------
 
-	
+
 	/**
 	 * Palauttaa esityksen päivämäärän.
 	 * käsittely muodossa: olio.annaPvm().get(Calendar.*haluttumääre*) - määre= DATE/MONTH/YEAR
@@ -67,27 +64,27 @@ public class Naytos{
 
 		return pvm;
 	}
-	
+
 	/**
 	 * Palauttaa teatterin jossa näytös on
 	 * @return Teatteri teatteri
 	 */
 	public Teatteri annaTeatteri(){
 		if(verbose){System.out.println("Luokka: Naytos : annaTeatteri()");}
-		
+
 		return teatteri;
 	}
-	
+
 	/**
 	 * Palauttaa salinumeron jossa esitys on
 	 * @return int salinumero
 	 */
 	public int annaSali(){
 		if(verbose){System.out.println("Luokka: Naytos : annaSali()");}
-		
+
 		return salinumero;
 	}
-	
+
 	/**
 	 * Palauttaa näytöksien kellonajat
 	 * Näytöksien ajankohdat ovat: 1-10:00 - 2-13:00 - 3-16:00 - 4-19:00 - 5-22:00
@@ -95,8 +92,8 @@ public class Naytos{
 	 */
 	public int annaAika(){
 		if(verbose){System.out.println("Luokka: Naytos : annaAika()");}
-		
-		
+
+
 		switch(aika){
 		case 1: aika = 1;
 		return 10;
@@ -109,41 +106,66 @@ public class Naytos{
 		case 5: aika = 5;
 		return 22;
 		}
-		
+
 		return -1;
-		
-		
+
+
 	}
-	
+
 	/**
 	 * Palauttaa näytöksien näytöspaikat, 1-5
 	 * @return int aika
 	 */
 	public int annaNaytosPaikka(){
 		if(verbose){System.out.println("Luokka: Naytos : annaNaytosPaikka()");}
-		
+
 		return aika;
 	}
-	
+
 	/**
 	 * palauttaa näytöksessä pyörivän elokuvan
 	 * @return Elokuva elokuva
 	 */
 	public Elokuva annaElokuva(){
 		if(verbose){System.out.println("Luokka: Naytos : annaElokuva()");}
-		
+
 		return elokuva;
 	}
-	
+
 	public void vaihdaPvm(int vuosi, int kuukausi, int paiva){
 		if(verbose){System.out.println("Luokka: Naytos : vaihdaPvm");}
-		
+
 		pvm.set(vuosi, kuukausi, paiva);
 	}
-	
+
 	//-----------------------------------------------------------------------------------------
-	
-	
+
+	/**TODO - Tarviiko aikaisempaa/myöhempää vertailua?
+	 * Vertailee kahden näytöksen päivämääriä. Sama = 0, verrattava aikaisemmin = -1, verrattava myöhemmin = 1
+	 * @param lisattava : Naytos
+	 * @return int
+	 */
+	public int vertaaPvm(Naytos lisattava){
+		if(verbose){System.out.println("Luokka: Naytos : vertaaPvm()");}
+
+		Calendar verrattavaPvm = lisattava.annaPvm();
+
+		//jos on sama päivä, palauta 0
+		if(verrattavaPvm.get(Calendar.DATE) == pvm.get(Calendar.DATE) &&
+				verrattavaPvm.get(Calendar.MONTH) == pvm.get(Calendar.MONTH) &&
+				verrattavaPvm.get(Calendar.YEAR) == pvm.get(Calendar.YEAR)){
+			
+			if(verbose){System.out.println("Luokka: Naytos : vertaaPvm() - verrattavalla naytoksella on sama pvm");}
+			return 0;
+		}
+		if(verbose){System.out.println("Luokka: Naytos : vertaaPvm() - samana päivänä ei muita esityksiä.");}
+		//jos on verrattava on aikaisemmin, palauttaa -1
+		
+		//jos verrattava on myöhemmin, palauttaa 1
+		return 1;
+
+	}
+
 	/**TESTAUKSEEN
 	 * tulostaa paikat
 	 */
@@ -170,18 +192,18 @@ public class Naytos{
 		}
 
 	}
-	
+
 	public String toString(){
-		
+
 		return "Päivämäärä: " +pvm.get(Calendar.DATE)
-			+"."+pvm.get(Calendar.MONTH)
-			+"."+pvm.get(Calendar.YEAR)
-			+"\nPaikka: "+teatteri.annaSali(salinumero).toString()
-			+"\nElokuva: "+elokuva.toString()
-			+"\nKlo: "+annaAika();
+				+"."+pvm.get(Calendar.MONTH)
+				+"."+pvm.get(Calendar.YEAR)
+				+"\nPaikka: "+teatteri.annaSali(salinumero).toString()
+				+"\nElokuva: "+elokuva.toString()
+				+"\nKlo: "+annaAika();
 	}
-	
-	
+
+
 
 
 

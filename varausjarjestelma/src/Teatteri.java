@@ -79,6 +79,64 @@ public class Teatteri {
 	//----------------------------------------------------------------
 
 	/**
+	 * Palauttaa kaikki elokuvat
+	 * @return ArrayList<Elokuva>
+	 */
+	public ArrayList<Elokuva> annaElokuvat(){
+		if(verbose){System.out.println("Luokka: Teatteri : annaElokuvat()");}
+		
+		ArrayList<Elokuva> elokuvat = new ArrayList<Elokuva>();
+		ArrayList<Naytos> naytokset = annaNaytokset();
+		Elokuva elokuva;
+		//iteroidaan naytokset-lista l‰pi ja lis‰t‰‰n elokuvat listaan Elokuva-oliot, kuitenkin poistaen dublikaatit
+		for(int i=0; i<naytokset.size(); i++){
+			elokuva = naytokset.get(i).annaElokuva();
+		
+			//tarkistaa onko elokuva jo lis‰tty
+			if(loytyykoElokuva(elokuva, elokuvat) == false){
+				elokuvat.add(elokuva);
+			}
+		}
+		return elokuvat;
+	}
+	
+	/**
+	 * tarkistaa onko elokuva jo lis‰tty listaan
+	 * @param elokuva : Elokuva
+	 * @param elokuvat : ArrayList<Elokuva>
+	 * @return boolean
+	 */
+	private boolean loytyykoElokuva(Elokuva elokuva, ArrayList<Elokuva> elokuvat){
+		if(verbose){System.out.println("Luokka: Teatteri : loytyykoElokuva()");}
+		
+		//jos elokuva jo listassa, palauttaa true
+		for(int i=0; i<elokuvat.size(); i++){
+			
+			if(elokuva.equals(elokuvat.get(i))){
+				if(verbose){System.out.println("Luokka: Teatteri : loytyykoElokuva() - elokuva jo listassa!");}
+				return true;
+			}
+		}
+		if(verbose){System.out.println("Luokka: Teatteri : loytyykoElokuva() - elokuvaa ei listassa");}
+		return false;
+	}
+	/**
+	 * palauttaa kaikki teatterin n‰ytˆkset
+	 * @return ArrayList<Naytos>
+	 */
+	public ArrayList<Naytos> annaNaytokset(){
+		if(verbose){System.out.println("Luokka: Teatteri : annaNaytokset()");}
+		//iteroi kaikkien salien kaikki elokuvat l‰pi ja lis‰‰ palautettavaan listaan
+		
+		ArrayList<Naytos> naytokset = new ArrayList<Naytos>();
+		for(int i=0; i<salit.size(); i++){
+			naytokset.addAll(salit.get(i).annaNaytokset());
+		}
+		
+		return naytokset;
+		
+	}
+	/**
 	 * Poistaa salin tietyst‰ paikasta. Ei muokkaa muiden salien ID-numeroita.
 	 * @param salinumero
 	 */

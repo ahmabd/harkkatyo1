@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 
@@ -124,32 +125,94 @@ public class Sali {
 
 	//------------------------------------------------------------
 
+	/**TODO miksei toimi? - ei käy näytöksiä läpi? 
+	 * palauttaa kaikki salin näytökset
+	 * @return ArrayList<Naytos>
+	 */
+	public ArrayList<Naytos> annaNaytokset(){
+		if(verbose){System.out.println("Luokka: Sali : annaNaytokset()");}
+
+		ArrayList<Naytos> elokuvat = new ArrayList<Naytos>();
+		//käy läpi kaikkien näytöksien elokuvat
+		for(int i=0; i<naytokset.size(); i++){
+			elokuvat.addAll(naytokset.get(i));
+
+		}
+
+		return elokuvat;
+	}
 	/**
-	 * TODO tee! 
+	 * TODO miksei toimi?
+	 * @param naytokset
+	 */
+	private void printtaaElokuvat(ArrayList<Naytos> naytokset){
+
+		for(int i=0; i<naytokset.size(); i++){
+			System.out.println(naytokset.get(i).toString());
+		}
+	}
+	/**
+	 * Lisää näytöksen saliin. Palauttaa booleanin true = onnistunut lisäys, false = epäonnistunut
+	 * @param naytos : Naytos 
+	 * @return boolean voidaanLisata
 	 */
 	public boolean  lisaaNaytos(Naytos naytos){
 		if(verbose){System.out.println("Luokka: Sali : lisaaNaytos()");}
 
-		//kertoo voidaanko esitys lisätä
-		boolean voidaanLisata = true;
-		//tarkastetaan onko samana päivänä samaan aikaan jo näytös. naytokset : ArrayList<ArrayList<Naytos>> : *näytöspaikat*<*samanaikaisetnäytökset*>
-		int naytosPaikka = naytos.annaNaytosPaikka();
-		
-		for(int i=0; i<naytokset.get(naytosPaikka-1).size(); i++){
-			//jos näytöspaikka ei ole tyhjä ja näytöspaikan näytöksistä jollain on sama päivämäärä
-			if(naytokset.get(naytosPaikka-1).get(i) != null && naytokset.get(naytosPaikka-1).get(i).annaPvm() == naytos.annaPvm()){
-				if(verbose){System.out.println("Luokka: Sali : lisaaNaytos() - salissa on jo näytös samaan aikaan-> ei voida lisätä!");}
-				//ei voida lisätä
-				voidaanLisata = false;
-				break;
+		//saman näytösajan muut näytökset
+		int naytosPaikka = naytos.annaNaytosPaikka();		
+		System.out.println("näytöksen näytöspaikka on: "+naytosPaikka);
+
+		//samanpaikannäytökset
+		ArrayList<Naytos> samanPaikanNaytokset = naytokset.get(naytosPaikka-1);
+
+		//voidaanko lisätä
+		boolean lisays = false;
+
+		//jos näytöspaikassa ei ole muita näytöksiä, lisätään näytös
+		if(samanPaikanNaytokset.size() == 0){
+			if(verbose){System.out.println("Luokka: Sali : lisaaNaytos() - näytöspaikassa ei muita näytöksiä!");}
+			naytokset.get(naytosPaikka-1).add(naytos);
+			lisays = true;
+		}else{
+			//on muita näytöksiä -> tarkistetaan onko samana päivänä
+			if(verbose){System.out.println("Luokka: Sali : lisaaNaytos() - Samaan aikaan on "+samanPaikanNaytokset.size()+" muuta näytöstä.");}
+			lisays = voidaankoLisata(naytos, samanPaikanNaytokset);
+
+			if(lisays){
+
+				naytokset.get(naytosPaikka-1).add(naytos);
+				lisays = true;
 			}
 		}
-		if(voidaanLisata){		
-			naytokset.get(naytosPaikka-1).add(naytos);
-			return true;
-		}
-		return false;		
+
+		if(verbose){System.out.println("Luokka: Sali : lisaaNaytos() - boolean lisays: "+lisays);}
+		return lisays;
 	}
+
+	/**
+	 * tarkistaa voidaanko näytös lisätä
+	 * @param naytos : Naytos
+	 * @param samanPaikanNaytokset : ArrayList<Naytos>
+	 * @return boolean 
+	 */
+	public boolean voidaankoLisata(Naytos naytos, ArrayList<Naytos> samanPaikanNaytokset){
+		if(verbose){System.out.println("Luokka: Sali : voidaankoLisata()");}
+		int vertailu;
+
+		//iteroidaan ArrayList läpi ja kutsutaan jokaisella Naytos-oliolla Naytokset compareTo - metodia. Jos palauttaa 0, päivämäärä on sama ja näytöstä ei voida lisätä
+		for(int i=0; i<samanPaikanNaytokset.size(); i++){
+			if(verbose){System.out.println("Luokka: Sali : voidaankoLisata() - vertailu saman paikan näytökseen no "+ (i+1));}
+			vertailu = naytos.vertaaPvm(samanPaikanNaytokset.get(i));
+			//jos vertailu palauttaa arvon 0, samana päivänä on jo näytös
+			if(vertailu == 0){
+				if(verbose){System.out.println("Luokka: Sali : voidaankoLisata() - naytos on samana päivänä -> ei voida lisätä");}
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Alustaa näytöspaikat ArrayList<Naytos> olioilla
 	 */
