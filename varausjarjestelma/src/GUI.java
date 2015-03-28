@@ -50,6 +50,10 @@ public class GUI {
 	private JTextField textField_3;
 	private JPasswordField passwordField_1;
 
+	//kayttajien tunnistamiseen
+	private boolean asiakas = false;
+	private boolean yllapitaja = false;
+	
 	//elokuvat, teatterit ja varaukset
 	private static ArrayList<Elokuva> elokuvat;
 	private JList<Elokuva> elokuvaLista;
@@ -57,7 +61,9 @@ public class GUI {
 	private JList <Teatteri> teatteriLista;
 	//varaukset TODO
 	
-	private JPanel panel;
+	private JPanel etusivu;
+	private JPanel varaussivu;
+	private JPanel kirjautumissivu;
 
 	/**
 	 * Launch the application.
@@ -97,23 +103,8 @@ public class GUI {
 	private void initialize() {
 		if(verbose){System.out.println("Luokka: GUI : initialize()");}
 
-		Kirjaudu = new JFrame();
-		Kirjaudu.setBounds(100, 100, 580, 500);
-		Kirjaudu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Kirjaudu.getContentPane().setLayout(null);
-
-		JLabel label = new JLabel("ICT-Elokuvateatteri");
-		label.setBounds(188, 6, 185, 26);
-		label.setFont(new Font("Lucida Grande", Font.PLAIN, 21));
-		Kirjaudu.getContentPane().add(label);
-
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(6, 35, 568, 405);
-		Kirjaudu.getContentPane().add(tabbedPane);
 		
-		panel = new JPanel();
-		tabbedPane.addTab("Etusivu", null, panel, null);
-		panel.setLayout(null);
+		paivitaValilehdet();
 
 		paivitaEtusivu(elokuvat, teatterit);
 		
@@ -135,26 +126,122 @@ public class GUI {
 		btnPivitElokuvateatterit.setBounds(232, 324, 184, 29);
 		panel.add(btnPivitElokuvateatterit);
 		*/
+		
+		//varaussivu nakyviin vain jos asiaks on kirjautunut
+		if(asiakas){
+		paivitaVarausSivu();
+		}
 
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("Varaa Lippu", null, panel_1, null);
-		panel_1.setLayout(null);
+		
+
+		
+
+		JLabel lblKirjaudu = new JLabel("Kirjaudu:");
+		lblKirjaudu.setBounds(6, 10, 75, 16);
+		kirjautumissivu.add(lblKirjaudu);
+
+		JLabel lblSalasana = new JLabel("Salasana:");
+		lblSalasana.setBounds(6, 79, 61, 16);
+		kirjautumissivu.add(lblSalasana);
+
+		textField_2 = new JTextField();
+		textField_2.setBounds(106, 45, 134, 28);
+		kirjautumissivu.add(textField_2);
+		textField_2.setColumns(10);
+
+		passwordField = new JPasswordField();
+		passwordField.setBounds(106, 73, 134, 28);
+		kirjautumissivu.add(passwordField);
+
+		JLabel lblRekisteridy = new JLabel("Rekister\u00F6idy:");
+		lblRekisteridy.setBounds(6, 164, 100, 16);
+		kirjautumissivu.add(lblRekisteridy);
+
+		JLabel lblValitseKyttjnimi = new JLabel("S\u00E4hk\u00F6posti:");
+		lblValitseKyttjnimi.setBounds(6, 200, 100, 16);
+		kirjautumissivu.add(lblValitseKyttjnimi);
+
+		JLabel lblUusiSalasana = new JLabel("Uusi Salasana:");
+		lblUusiSalasana.setBounds(6, 228, 132, 16);
+		kirjautumissivu.add(lblUusiSalasana);
+
+		textField_3 = new JTextField();
+		textField_3.setBounds(106, 194, 134, 28);
+		kirjautumissivu.add(textField_3);
+		textField_3.setColumns(10);
+
+		passwordField_1 = new JPasswordField();
+		passwordField_1.setBounds(106, 222, 134, 28);
+		kirjautumissivu.add(passwordField_1);
+
+		JLabel label_1 = new JLabel("S\u00E4hk\u00F6posti:");
+		label_1.setBounds(6, 51, 100, 16);
+		kirjautumissivu.add(label_1);
+
+		JButton btnKirjaudu = new JButton("Kirjaudu");
+		btnKirjaudu.setBounds(106, 113, 117, 29);
+		kirjautumissivu.add(btnKirjaudu);
+
+		JButton btnNewButton = new JButton("Rekister\u00F6idy");
+		btnNewButton.setBounds(106, 261, 117, 29);
+		kirjautumissivu.add(btnNewButton);
+
+		JSeparator separator = new JSeparator();
+		separator.setBounds(0, 154, 289, 12);
+		kirjautumissivu.add(separator);
+	}
+	
+	/**
+	 * Paivittaa valilehdet riippuen siitä kuka kayttaja on kyseessa
+	 */
+	public void paivitaValilehdet(){
+		Kirjaudu = new JFrame();
+		Kirjaudu.setBounds(100, 100, 580, 500);
+		Kirjaudu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Kirjaudu.getContentPane().setLayout(null);
+
+		JLabel label = new JLabel("ICT-Elokuvateatteri");
+		label.setBounds(188, 6, 185, 26);
+		label.setFont(new Font("Lucida Grande", Font.PLAIN, 21));
+		Kirjaudu.getContentPane().add(label);
+
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(6, 35, 568, 405);
+		Kirjaudu.getContentPane().add(tabbedPane);
+	
+		etusivu = new JPanel();
+		tabbedPane.addTab("Etusivu", null, etusivu, null);
+		etusivu.setLayout(null);
+		
+		if(asiakas == true){
+		varaussivu = new JPanel();
+		tabbedPane.addTab("Varaa lippuja", null, varaussivu, null);
+		varaussivu.setLayout(null);
+		}
+		
+		kirjautumissivu = new JPanel();
+		tabbedPane.addTab("Kirjaudu", null, kirjautumissivu, null);
+		kirjautumissivu.setLayout(null);
+	}
+	
+	public void paivitaVarausSivu(){
+		
 
 		JLabel lblValitseTeatteri = new JLabel("Teatteri:");
 		lblValitseTeatteri.setBounds(16, 52, 116, 16);
-		panel_1.add(lblValitseTeatteri);
+		varaussivu.add(lblValitseTeatteri);
 
 		JLabel lblValitseElokuva = new JLabel("Elokuva:");
 		lblValitseElokuva.setBounds(171, 52, 116, 16);
-		panel_1.add(lblValitseElokuva);
+		varaussivu.add(lblValitseElokuva);
 
 		JLabel lblVytsaika = new JLabel("N\u00E4yt\u00F6saika:");
 		lblVytsaika.setBounds(332, 52, 116, 16);
-		panel_1.add(lblVytsaika);
+		varaussivu.add(lblVytsaika);
 
 		JLabel lblValitse = new JLabel("Valitse:");
 		lblValitse.setBounds(16, 23, 61, 16);
-		panel_1.add(lblValitse);
+		varaussivu.add(lblValitse);
 
 		JButton btnVaraa = new JButton("Varaa");
 		btnVaraa.addActionListener(new ActionListener() {
@@ -163,79 +250,20 @@ public class GUI {
 			}
 		});
 		btnVaraa.setBounds(16, 290, 117, 29);
-		panel_1.add(btnVaraa);
+		varaussivu.add(btnVaraa);
 
 		JList list_2 = new JList();
 		list_2.setBounds(16, 94, 134, 173);
-		panel_1.add(list_2);
+		varaussivu.add(list_2);
 
 		JList list_3 = new JList();
 		list_3.setBounds(171, 94, 134, 173);
-		panel_1.add(list_3);
+		varaussivu.add(list_3);
 
 		JList list_4 = new JList();
 		list_4.setBounds(332, 94, 134, 173);
-		panel_1.add(list_4);
-
-		JPanel panel_2 = new JPanel();
-		tabbedPane.addTab("Kirjaudu", null, panel_2, null);
-		panel_2.setLayout(null);
-
-		JLabel lblKirjaudu = new JLabel("Kirjaudu:");
-		lblKirjaudu.setBounds(6, 10, 75, 16);
-		panel_2.add(lblKirjaudu);
-
-		JLabel lblSalasana = new JLabel("Salasana:");
-		lblSalasana.setBounds(6, 79, 61, 16);
-		panel_2.add(lblSalasana);
-
-		textField_2 = new JTextField();
-		textField_2.setBounds(106, 45, 134, 28);
-		panel_2.add(textField_2);
-		textField_2.setColumns(10);
-
-		passwordField = new JPasswordField();
-		passwordField.setBounds(106, 73, 134, 28);
-		panel_2.add(passwordField);
-
-		JLabel lblRekisteridy = new JLabel("Rekister\u00F6idy:");
-		lblRekisteridy.setBounds(6, 164, 100, 16);
-		panel_2.add(lblRekisteridy);
-
-		JLabel lblValitseKyttjnimi = new JLabel("S\u00E4hk\u00F6posti:");
-		lblValitseKyttjnimi.setBounds(6, 200, 100, 16);
-		panel_2.add(lblValitseKyttjnimi);
-
-		JLabel lblUusiSalasana = new JLabel("Uusi Salasana:");
-		lblUusiSalasana.setBounds(6, 228, 132, 16);
-		panel_2.add(lblUusiSalasana);
-
-		textField_3 = new JTextField();
-		textField_3.setBounds(106, 194, 134, 28);
-		panel_2.add(textField_3);
-		textField_3.setColumns(10);
-
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(106, 222, 134, 28);
-		panel_2.add(passwordField_1);
-
-		JLabel label_1 = new JLabel("S\u00E4hk\u00F6posti:");
-		label_1.setBounds(6, 51, 100, 16);
-		panel_2.add(label_1);
-
-		JButton btnKirjaudu = new JButton("Kirjaudu");
-		btnKirjaudu.setBounds(106, 113, 117, 29);
-		panel_2.add(btnKirjaudu);
-
-		JButton btnNewButton = new JButton("Rekister\u00F6idy");
-		btnNewButton.setBounds(106, 261, 117, 29);
-		panel_2.add(btnNewButton);
-
-		JSeparator separator = new JSeparator();
-		separator.setBounds(0, 154, 289, 12);
-		panel_2.add(separator);
+		varaussivu.add(list_4);
 	}
-	
 	/**
 	 * Paivittaa etusivu-valilehden annetuilla elokuva ja teatteri ArrayListoilla
 	 * @param uudetElokuvat : ArrayList<Elokuva>
@@ -244,20 +272,20 @@ public class GUI {
 	public void paivitaEtusivu(ArrayList<Elokuva> uudetElokuvat, ArrayList<Teatteri> uudetTeatterit){
 		if(verbose){System.out.println("Luokka: GUI : paivitaEtusivu()");}
 		
-		panel.removeAll();						
-		panel.repaint();
+		etusivu.removeAll();						
+		etusivu.repaint();
 		
 		JLabel lblValitse = new JLabel("<html>Tervetuloa ICT-Elokuvateatteriin! Alla voit selata elokuvia ja niiden esityspaikkoja!<br>Meillä on tarjolla jokaiselle jotakin!</html>");
 		lblValitse.setBounds(20, 0, 500, 50);
-		panel.add(lblValitse);
+		etusivu.add(lblValitse);
 
 		JLabel lblElokuvat = new JLabel("Elokuvat:");
 		lblElokuvat.setBounds(20, 50, 81, 16);
-		panel.add(lblElokuvat);
+		etusivu.add(lblElokuvat);
 
 		JLabel lblElokuvateatteri = new JLabel("Elokuvateatterit:");
 		lblElokuvateatteri.setBounds(232, 50, 101, 16);
-		panel.add(lblElokuvateatteri);
+		etusivu.add(lblElokuvateatteri);
 
 		//paivittaa elokuvat
 		paivitaElokuvat(uudetElokuvat);
@@ -275,7 +303,7 @@ public class GUI {
 			}
 		});
 		btnPivitElokuvat.setBounds(20, 324, 184, 29);
-		panel.add(btnPivitElokuvat);
+		etusivu.add(btnPivitElokuvat);
 	}
 
 	/**
@@ -354,7 +382,7 @@ public class GUI {
 	/**
 	 * Paivittaa teatterit etusivu-välilehden listaan
 	 * @param teatterit
-	 * @param panel
+	 * @param etusivu
 	 */
 	public void paivitaTeatterit(ArrayList<Teatteri> teatterit){
 		if(verbose){System.out.println("Luokka: GUI : paivitaTeatterit()");}
@@ -363,13 +391,13 @@ public class GUI {
 
 		teatteriLista = new JList(teatterit.toArray());	
 		teatteriLista.setBounds(232, 70, 184, 251);
-		panel.add(teatteriLista);
+		etusivu.add(teatteriLista);
 
 	}
 	/**
 	 * Paivittaa elokuvat - etusivu-välilehden listaan
 	 * @param elokuvat
-	 * @param panel
+	 * @param etusivu
 	 */
 	public void paivitaElokuvat(ArrayList<Elokuva> elokuvat){
 		if(verbose){System.out.println("Luokka: GUI : paivitaElokuvat()");}
@@ -378,11 +406,11 @@ public class GUI {
 		elokuvaLista =  new JList(elokuvat.toArray());
 		elokuvaLista.setBounds(20, 70, 184, 251);
 		
-		panel.add(elokuvaLista);
+		etusivu.add(elokuvaLista);
 		
-		panel.revalidate();
+		etusivu.revalidate();
 		
-		panel.repaint();
+		etusivu.repaint();
 		
 		
 
