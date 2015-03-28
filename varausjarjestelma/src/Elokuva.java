@@ -40,7 +40,7 @@ public class Elokuva{
 
 	public String toString(){
 		if(verbose){System.out.println("Luokka: Elokuva : toString()");}
-		return("Nimi: " + nimi + ", Kesto: " + kesto);		
+		return(nimi + ", "+kesto+"min");		
 	}
 
 	public boolean equals(Elokuva verrattava){

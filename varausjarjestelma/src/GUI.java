@@ -24,9 +24,20 @@ import javax.swing.JEditorPane;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import java.util.ArrayList;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.JFrame;
+
+import javax.swing.JScrollPane;
+
 import javax.swing.JList;
+
+
 
 public class GUI {
 
@@ -41,6 +52,7 @@ public class GUI {
 
 	//elokuvat, teatterit ja varaukset
 	private static ArrayList<Elokuva> elokuvat;
+	private JList<Elokuva> elokuvaLista;
 	private static ArrayList<Teatteri> teatterit;
 	//varaukset TODO
 
@@ -49,6 +61,7 @@ public class GUI {
 	 */
 
 	public static void main(String[] args) {
+		if(verbose){System.out.println("Luokka: GUI : main()");}
 
 		alusta();
 		EventQueue.invokeLater(new Runnable() {
@@ -67,7 +80,10 @@ public class GUI {
 	 * Create the application.
 	 */
 	public GUI() {
+		if(verbose){System.out.println("Luokka: GUI : konstruktori()");}
 		initialize();
+
+
 	}
 
 	/**
@@ -75,6 +91,8 @@ public class GUI {
 	 */
 	@SuppressWarnings("unchecked")
 	private void initialize() {
+		if(verbose){System.out.println("Luokka: GUI : initialize()");}
+
 		Kirjaudu = new JFrame();
 		Kirjaudu.setBounds(100, 100, 580, 500);
 		Kirjaudu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,17 +115,31 @@ public class GUI {
 		lblElokuvat.setBounds(20, 12, 81, 16);
 		panel.add(lblElokuvat);
 
-		JLabel lblElokuvateatteri = new JLabel("Elokuvateatteri:");
+		JLabel lblElokuvateatteri = new JLabel("Elokuvateatterit:");
 		lblElokuvateatteri.setBounds(232, 12, 101, 16);
 		panel.add(lblElokuvateatteri);
 
+		//paivittaa elokuvat
 		paivitaElokuvat(elokuvat, panel);
+		//paivittaa teatterit
+		paivitaTeatterit(teatterit, panel);
+
+		MouseListener listener = new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+				elokuvaLista = (JList) e.getSource();
+
+				int index = elokuvaLista.locationToIndex(e.getPoint());
+				if(e.getClickCount() ==2){
+					if(index >= 0){
+						Elokuva el = elokuvaLista.getModel().getElementAt(index);
+						System.out.println("Klikattu: "+ el.toString());
+					}
+				}
+			}
+		};
+		elokuvaLista.addMouseListener(listener);
 
 
-
-		JList list_1 = new JList();
-		list_1.setBounds(232, 40, 184, 251);
-		panel.add(list_1);
 
 		JButton btnPivitElokuvat = new JButton("P\u00E4ivit\u00E4 Elokuvat");
 		btnPivitElokuvat.addActionListener(new ActionListener() {
@@ -221,13 +253,29 @@ public class GUI {
 		panel_2.add(separator);
 	}
 
+	public void paivitaTeatterit(ArrayList<Teatteri> teatterit, JPanel panel){
+		if(verbose){System.out.println("Luokka: GUI : paivitaTeatterit()");}
+
+		//teatterilistaa 
+		JList<Teatteri> list = new JList<Teatteri>();
+		list = new JList(teatterit.toArray());	
+		list.setBounds(232, 40, 184, 251);
+		panel.add(list);
+
+	}
+	/**
+	 * Paivittaa elokuvat - etusivu-välilehden listaan
+	 * @param elokuvat
+	 * @param panel
+	 */
 	public void paivitaElokuvat(ArrayList<Elokuva> elokuvat, JPanel panel){
 		if(verbose){System.out.println("Luokka: GUI : paivitaElokuvat()");}
 		//elokuvalistaa tähän
 		JList<Elokuva> list = new JList<Elokuva>();
-		list =  new JList(elokuvat.toArray());
-		list.setBounds(20, 40, 184, 251);
-		panel.add(list);
+		elokuvaLista =  new JList(elokuvat.toArray());
+		elokuvaLista.setBounds(20, 40, 184, 251);
+		panel.add(elokuvaLista);
+
 	}
 
 	/**
@@ -236,19 +284,59 @@ public class GUI {
 	 */
 	private static void alusta(){
 		if(verbose){System.out.println("Luokka: GUI : alusta()");}
+
 		elokuvat = new ArrayList<Elokuva>();
 		//elokuvat
 		Elokuva elokuva;
 		for(int i=0; i<10; i++){
-			elokuva = new Elokuva("Iso Arska "+(i+1) , 120);
-			if(verbose){System.out.println(elokuva.toString());}
+			elokuva = new Elokuva("Iso Arska "+(i+1) , 120);			
 			elokuvat.add(elokuva);
 		}
+		if(verbose){tulostaElokuvat(elokuvat);}
 		//teatterit
+		teatterit = new ArrayList<Teatteri>();
 		Teatteri teatteri;
 		for(int i=0; i<3;i++){
-			//	teatteri = new Teatteri()
-		}
+			teatteri = new Teatteri("Teatteri"+(i+1),"Turku",2);
+			//alustaa salit
+			for(int j=0; j<teatteri.annaSalit().size(); j++){
+				teatteri.annaSali(j).asetaSalinKoko(((i+1)*5),((i+1)*5));
 
+				//tulostaa salipaikat
+				if(verbose){		
+					teatteri.annaSali(j).tulostaPaikat();
+				}
+			}
+			teatterit.add(teatteri);
+		}
+		if(verbose){tulostaTeatterit(teatterit);}
+		lisaaNaytokset();
+
+	}
+
+	//TODO
+	public static void lisaaNaytokset(){
+
+	}
+
+	/**TESTAUKSEEN
+	 * Tulostaa elokuvat
+	 * @param elokuvat
+	 */
+	private static void tulostaElokuvat(ArrayList<Elokuva> elokuvat){
+		if(verbose){System.out.println("Luokka: GUI : tulostaElokuvat()");}
+		for(int i=0; i<elokuvat.size(); i++){
+			System.out.println(elokuvat.get(i).toString());
+		}
+	}
+	/**TESTAUKSEEN
+	 * Tulostaa teatterit
+	 * @param teatteri
+	 */
+	private static void tulostaTeatterit(ArrayList<Teatteri> teatteri){
+		if(verbose){System.out.println("Luokka: GUI : tulostaTeatterit()");}
+		for(int i=0; i<teatterit.size(); i++){
+			System.out.println(teatterit.get(i).toString());			
+		}
 	}
 }

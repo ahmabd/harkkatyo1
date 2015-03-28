@@ -51,7 +51,7 @@ public class Teatteri {
 	 * @return Sali 
 	 */
 	public Sali annaSali(int salinumero){
-		return salit.get(salinumero-1);
+		return salit.get(salinumero);
 	}
 
 	public void asetaNimi(String nimi){
@@ -193,8 +193,8 @@ public class Teatteri {
 	public String toString(){
 		if(verbose){System.out.println("Luokka: Teatteri : toString()");}
 
-		String a = ("Nimi: "+ nimi
-				+", Paikkakunta: "+paikkakunta
+		String a = (nimi
+				+", "+paikkakunta
 				+", Salit: ");
 		//laittaa pilkut salien väliin niin ettei viimeisen jälkeen enää tule :D 
 		for(int i=0; i<salit.size(); i++){
