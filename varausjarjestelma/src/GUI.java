@@ -246,13 +246,17 @@ public class GUI {
 		
 		panel.removeAll();						
 		panel.repaint();
+		
+		JLabel lblValitse = new JLabel("Tervetuloa ICT Elokuvateatteriin! Alla voit selata elokuvia ja niiden esityspaikkoja!");
+		lblValitse.setBounds(20, 10, 500, 16);
+		panel.add(lblValitse);
 
 		JLabel lblElokuvat = new JLabel("Elokuvat:");
-		lblElokuvat.setBounds(20, 12, 81, 16);
+		lblElokuvat.setBounds(20, 40, 81, 16);
 		panel.add(lblElokuvat);
 
 		JLabel lblElokuvateatteri = new JLabel("Elokuvateatterit:");
-		lblElokuvateatteri.setBounds(232, 12, 101, 16);
+		lblElokuvateatteri.setBounds(232, 40, 101, 16);
 		panel.add(lblElokuvateatteri);
 
 		//paivittaa elokuvat
@@ -358,7 +362,7 @@ public class GUI {
 		//teatterilistaa 
 
 		teatteriLista = new JList(teatterit.toArray());	
-		teatteriLista.setBounds(232, 40, 184, 251);
+		teatteriLista.setBounds(232, 70, 184, 251);
 		panel.add(teatteriLista);
 
 	}
@@ -372,7 +376,7 @@ public class GUI {
 		//elokuvalistaa tähän
 
 		elokuvaLista =  new JList(elokuvat.toArray());
-		elokuvaLista.setBounds(20, 40, 184, 251);
+		elokuvaLista.setBounds(20, 70, 184, 251);
 		
 		panel.add(elokuvaLista);
 		
