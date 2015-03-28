@@ -44,26 +44,33 @@ public class GUI {
 	//testaukseem
 	private static boolean verbose = true;
 
-	private JFrame Kirjaudu;
+	private JFrame tausta;
 	private JTextField textField_2;
 	private JPasswordField passwordField;
 	private JTextField textField_3;
 	private JPasswordField passwordField_1;
 
 	//kayttajien tunnistamiseen
-	private boolean asiakas = false;
-	private boolean yllapitaja = false;
-	
+	private boolean asiakas = true;
+	private boolean yllapitaja = true;
+	private boolean kirjautunut = false;
+
 	//elokuvat, teatterit ja varaukset
 	private static ArrayList<Elokuva> elokuvat;
 	private JList<Elokuva> elokuvaLista;
 	private static ArrayList<Teatteri> teatterit;
 	private JList <Teatteri> teatteriLista;
-	//varaukset TODO
-	
+	//varaukset & kayttajat
+	private ArrayList<Kayttaja> kayttajat;
+	private ArrayList<Varaus> varaukset;
+
 	private JPanel etusivu;
 	private JPanel varaussivu;
 	private JPanel kirjautumissivu;
+	private JPanel hallintapaneeli;
+	private JPanel kayttajanTiedot;
+	
+	
 
 	/**
 	 * Launch the application.
@@ -72,13 +79,16 @@ public class GUI {
 	public static void main(String[] args) {
 		if(verbose){System.out.println("Luokka: GUI : main()");}
 
-		//TODO tarkistus -> jos ei ole aikaisempia kirjoitettuja Teatteri-olioita ajetaan alusta - metodi
-		alusta();
+		/*TODO tarkistus -> jos ei ole aikaisempia kirjoitettuja Teatteri-olioita ajetaan alusta - metodi
+		 * Kaytannossa varmaan try(*lue filut*)catch(*ei aikaisemmin tallennettuja filuja joten alustus*)
+		 * Ohjelman lopettamisen yhteydessä
+		*/alusta();
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					GUI window = new GUI();
-					window.Kirjaudu.setVisible(true);
+					window.tausta.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -103,38 +113,29 @@ public class GUI {
 	private void initialize() {
 		if(verbose){System.out.println("Luokka: GUI : initialize()");}
 
-		
+		//paivittaa valilehdet
 		paivitaValilehdet();
 
+		//paivittaa etusivun
 		paivitaEtusivu(elokuvat, teatterit);
-		
 
-
-
-
-		/*
-
-		JButton btnPivitElokuvat = new JButton("P\u00E4ivit\u00E4 Elokuvat");
-		btnPivitElokuvat.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnPivitElokuvat.setBounds(20, 324, 184, 29);
-		panel.add(btnPivitElokuvat);
-
-		JButton btnPivitElokuvateatterit = new JButton("P\u00E4ivit\u00E4 Elokuvateatterit");
-		btnPivitElokuvateatterit.setBounds(232, 324, 184, 29);
-		panel.add(btnPivitElokuvateatterit);
-		*/
-		
 		//varaussivu nakyviin vain jos asiaks on kirjautunut
 		if(asiakas){
-		paivitaVarausSivu();
+			paivitaVarausSivu();
 		}
 
-		
+		if(kirjautunut == false){
+			paivitaKirjautumisSivu();
+		}
 
-		
+
+
+
+
+	}
+
+	public void paivitaKirjautumisSivu(){
+		if(verbose){System.out.println("Luokka: GUI : paivitaKirjautumisSivu()");}
 
 		JLabel lblKirjaudu = new JLabel("Kirjaudu:");
 		lblKirjaudu.setBounds(6, 10, 75, 16);
@@ -190,42 +191,58 @@ public class GUI {
 		separator.setBounds(0, 154, 289, 12);
 		kirjautumissivu.add(separator);
 	}
-	
 	/**
 	 * Paivittaa valilehdet riippuen siitä kuka kayttaja on kyseessa
 	 */
 	public void paivitaValilehdet(){
-		Kirjaudu = new JFrame();
-		Kirjaudu.setBounds(100, 100, 580, 500);
-		Kirjaudu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Kirjaudu.getContentPane().setLayout(null);
+		if(verbose){System.out.println("Luokka: GUI : paivitaValilehdet()");}
+		
+		tausta = new JFrame();
+		tausta.setBounds(100, 100, 580, 500);
+		tausta.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		tausta.getContentPane().setLayout(null);
 
 		JLabel label = new JLabel("ICT-Elokuvateatteri");
 		label.setBounds(188, 6, 185, 26);
 		label.setFont(new Font("Lucida Grande", Font.PLAIN, 21));
-		Kirjaudu.getContentPane().add(label);
+		tausta.getContentPane().add(label);
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(6, 35, 568, 405);
-		Kirjaudu.getContentPane().add(tabbedPane);
-	
+		tausta.getContentPane().add(tabbedPane);
+
 		etusivu = new JPanel();
 		tabbedPane.addTab("Etusivu", null, etusivu, null);
 		etusivu.setLayout(null);
-		
+
+		//vain jos kyseessä on asiakas
 		if(asiakas == true){
-		varaussivu = new JPanel();
-		tabbedPane.addTab("Varaa lippuja", null, varaussivu, null);
-		varaussivu.setLayout(null);
+			varaussivu = new JPanel();
+			tabbedPane.addTab("Varaa lippuja", null, varaussivu, null);
+			varaussivu.setLayout(null);
+			
+			kayttajanTiedot = new JPanel();
+			tabbedPane.addTab("Omat tiedot", null, kayttajanTiedot, null);
+			kayttajanTiedot.setLayout(null);
+		}
+
+		//vain jos kyseessä on yllapitaja
+		if(yllapitaja == true){
+			hallintapaneeli = new JPanel();
+			tabbedPane.addTab("Hallintapaneeli", null, hallintapaneeli, null);
+			varaussivu.setLayout(null);
 		}
 		
-		kirjautumissivu = new JPanel();
-		tabbedPane.addTab("Kirjaudu", null, kirjautumissivu, null);
-		kirjautumissivu.setLayout(null);
+		//vain jos kukaan ei ole vielä kirjautunut
+		if(kirjautunut == false){
+			kirjautumissivu = new JPanel();
+			tabbedPane.addTab("Kirjaudu", null, kirjautumissivu, null);
+			kirjautumissivu.setLayout(null);
+		}
 	}
-	
+
 	public void paivitaVarausSivu(){
-		
+		if(verbose){System.out.println("Luokka: GUI : paivitaVarausSivu()");}
 
 		JLabel lblValitseTeatteri = new JLabel("Teatteri:");
 		lblValitseTeatteri.setBounds(16, 52, 116, 16);
@@ -271,10 +288,10 @@ public class GUI {
 	 */
 	public void paivitaEtusivu(ArrayList<Elokuva> uudetElokuvat, ArrayList<Teatteri> uudetTeatterit){
 		if(verbose){System.out.println("Luokka: GUI : paivitaEtusivu()");}
-		
+
 		etusivu.removeAll();						
 		etusivu.repaint();
-		
+
 		JLabel lblValitse = new JLabel("<html>Tervetuloa ICT-Elokuvateatteriin! Alla voit selata elokuvia ja niiden esityspaikkoja!<br>Meillä on tarjolla jokaiselle jotakin!</html>");
 		lblValitse.setBounds(20, 0, 500, 50);
 		etusivu.add(lblValitse);
@@ -294,7 +311,7 @@ public class GUI {
 
 		elokuvaHiiri();
 		teatteriHiiri();
-		
+
 		JButton btnPivitElokuvat = new JButton("Kaikki Elokuvat ja teatterit");
 		btnPivitElokuvat.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -321,13 +338,13 @@ public class GUI {
 					if(index >= 0){
 						Teatteri te = teatteriLista.getModel().getElementAt(index);
 						if(verbose){System.out.println("Luokka: GUI : teatteriHiiri() - Klikattu: \n"+ te.toString());}
-						
+
 						//elokuvien päivitys kyseisen teatterin elokuviksi
 						ArrayList<Elokuva> teatterinElokuvat = new ArrayList<Elokuva>();
 						teatterinElokuvat.addAll(te.annaElokuvat());
-						
+
 						paivitaEtusivu(teatterinElokuvat, teatterit);
-						
+
 					}
 				}
 			}
@@ -349,25 +366,25 @@ public class GUI {
 					if(index >= 0){
 						Elokuva el = elokuvaLista.getModel().getElementAt(index);
 						if(verbose){System.out.println("Luokka: GUI : elokuvaHiiri() - Klikattu: \n"+ el.toString());}
-						
+
 						//TODO - teatterien päivitys niihin joissa kyseinen elokuva pyörii
 						ArrayList<Teatteri> elokuvanTeatterit = new ArrayList<Teatteri>();
 						elokuvanTeatterit.addAll(loytyykoElokuva(el));
-						
+
 						paivitaEtusivu(elokuvat, elokuvanTeatterit);
-						
+
 					}
 				}
 			}
 		};
 		elokuvaLista.addMouseListener(listener);
 	}
-	
+
 	public ArrayList<Teatteri> loytyykoElokuva(Elokuva el){
 		if(verbose){System.out.println("Luokka: GUI : loytyykoElokuva()");}
 		ArrayList<Teatteri> elokuvanTeatterit = new ArrayList<Teatteri>();
 		ArrayList<Elokuva> leffat = new ArrayList<Elokuva>();
-		
+
 		//haetaan kyseistä elokuvaa teatterin tarjonnasta
 		for(int i=0; i<teatterit.size(); i++){
 			Teatteri teatteri = teatterit.get(i);
@@ -405,14 +422,14 @@ public class GUI {
 
 		elokuvaLista =  new JList(elokuvat.toArray());
 		elokuvaLista.setBounds(20, 70, 184, 251);
-		
+
 		etusivu.add(elokuvaLista);
-		
+
 		etusivu.revalidate();
-		
+
 		etusivu.repaint();
-		
-		
+
+
 
 	}
 
@@ -460,7 +477,7 @@ public class GUI {
 	 */
 	public static void lisaaNaytokset(){
 		if(verbose){System.out.println("Luokka: GUI : lisaaNaytokset()");}
-		
+
 		int salit;
 		Teatteri teatteri;
 		//arska 1- 4 teatteri1:n
@@ -468,8 +485,8 @@ public class GUI {
 		salit = teatteri.annaSalit().size();
 		for(int i=0; i<salit; i++){
 			for(int j =0; j<5; j++){
-			//näytösaikaan lisätään +1, koska sali-luokka lukee sitä luvuilla 1-5
-			teatteri.annaSali(i).lisaaNaytos(new Naytos(2015,3,28,i, teatteri, elokuvat.get(j), j+1));
+				//näytösaikaan lisätään +1, koska sali-luokka lukee sitä luvuilla 1-5
+				teatteri.annaSali(i).lisaaNaytos(new Naytos(2015,3,28,i, teatteri, elokuvat.get(j), j+1));
 			}
 		}
 		//arska 4-8 teatteri2:n
@@ -479,9 +496,9 @@ public class GUI {
 		for(int i=0; i<salit; i++){
 			aika = 1;
 			for(int j =4; j<8; j++){
-			//näytösaikaan lisätään +1, koska sali-luokka lukee sitä luvuilla 1-5
-			teatteri.annaSali(i).lisaaNaytos(new Naytos(2015,3,28,i, teatteri, elokuvat.get(j), aika));
-			aika ++;
+				//näytösaikaan lisätään +1, koska sali-luokka lukee sitä luvuilla 1-5
+				teatteri.annaSali(i).lisaaNaytos(new Naytos(2015,3,28,i, teatteri, elokuvat.get(j), aika));
+				aika ++;
 			}
 		}
 		//arska 5-10 teatteri 3:n
@@ -490,15 +507,15 @@ public class GUI {
 		for(int i=0; i<salit; i++){
 			aika = 1;
 			for(int j =7; j<10; j++){
-			//näytösaikaan lisätään +1, koska sali-luokka lukee sitä luvuilla 1-5
-			teatteri.annaSali(i).lisaaNaytos(new Naytos(2015,3,28,i, teatteri, elokuvat.get(j), aika));
-			aika++;
+				//näytösaikaan lisätään +1, koska sali-luokka lukee sitä luvuilla 1-5
+				teatteri.annaSali(i).lisaaNaytos(new Naytos(2015,3,28,i, teatteri, elokuvat.get(j), aika));
+				aika++;
 			}
 		}
-		
+
 		if(verbose){
 			if(verbose){System.out.println("Luokka: GUI : lisaaNaytokset() - kaikki näytökset:");}
-			
+
 			ArrayList<Naytos> naytokset = new ArrayList<Naytos>();
 			for(int i=0; i<teatterit.size(); i++){
 				naytokset.addAll(teatterit.get(i).annaNaytokset());
