@@ -64,6 +64,7 @@ public class GUI {
 	public static void main(String[] args) {
 		if(verbose){System.out.println("Luokka: GUI : main()");}
 
+		//TODO tarkistus -> jos ei ole aikaisempia kirjoitettuja Teatteri-olioita ajetaan alusta - metodi
 		alusta();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -244,6 +245,9 @@ public class GUI {
 		panel_2.add(separator);
 	}
 
+	/**
+	 * Lisää MouseListenerin teatteri-listaan etusivulle
+	 */
 	public void lisaaTeatteriHiiri(){
 		if(verbose){System.out.println("Luokka: GUI : lisaaTeatteriHiiri()");}
 
@@ -256,6 +260,8 @@ public class GUI {
 					if(index >= 0){
 						Teatteri te = teatteriLista.getModel().getElementAt(index);
 						if(verbose){System.out.println("Luokka: GUI : lisaaTeatteriHiiri() - Klikattu: \n"+ te.toString());}
+						
+						//TODO - elokuvien päivitys kyseisen teatterin elokuviksi
 					}
 				}
 			}
@@ -276,7 +282,9 @@ public class GUI {
 				if(e.getClickCount() ==2){
 					if(index >= 0){
 						Elokuva el = elokuvaLista.getModel().getElementAt(index);
-						if(verbose){System.out.println("Luokka: GUI : lisaaTeatteriHiiri() - Klikattu: \n"+ el.toString());}
+						if(verbose){System.out.println("Luokka: GUI : lisaaElokuvaHiiri() - Klikattu: \n"+ el.toString());}
+						
+						//TODO - teatterien päivitys niihin joissa kyseinen elokuva pyörii
 						
 					}
 				}
@@ -328,7 +336,9 @@ public class GUI {
 			elokuva = new Elokuva("Iso Arska "+(i+1) , 120);			
 			elokuvat.add(elokuva);
 		}
-		if(verbose){tulostaElokuvat(elokuvat);}
+		if(verbose){
+			System.out.println("Luokka: GUI : alusta() - elokuvat:");
+			tulostaElokuvat(elokuvat);}
 		//teatterit
 		teatterit = new ArrayList<Teatteri>();
 		Teatteri teatteri;
@@ -336,10 +346,11 @@ public class GUI {
 			teatteri = new Teatteri("Teatteri"+(i+1),"Turku",2);
 			//alustaa salit
 			for(int j=0; j<teatteri.annaSalit().size(); j++){
-				teatteri.annaSali(j).asetaSalinKoko(((i+1)*5),((i+1)*5));
+				teatteri.annaSali(j).asetaSalinKoko(((j+1)*5),((i+1)*5));
 
 				//tulostaa salipaikat
-				if(verbose){		
+				if(verbose){
+					System.out.println("Luokka: GUI : alusta() - salipaikat: "+teatteri.annaNimi() +" : "+teatteri.annaSali(j));
 					teatteri.annaSali(j).tulostaPaikat();
 				}
 			}
@@ -350,9 +361,58 @@ public class GUI {
 
 	}
 
-	//TODO
+	/**
+	 * lisää näytökset alustuksen yhteydessä
+	 */
 	public static void lisaaNaytokset(){
-
+		if(verbose){System.out.println("Luokka: GUI : lisaaNaytokset()");}
+		
+		int salit;
+		Teatteri teatteri;
+		//arska 1- 4 teatteri1:n
+		teatteri = teatterit.get(0);
+		salit = teatteri.annaSalit().size();
+		for(int i=0; i<salit; i++){
+			for(int j =0; j<4; j++){
+			//näytösaikaan lisätään +1, koska sali-luokka lukee sitä luvuilla 1-5
+			teatteri.annaSali(i).lisaaNaytos(new Naytos(2015,3,28,i, teatteri, elokuvat.get(j), j+1));
+			}
+		}
+		//arska 4-8 teatteri2:n
+		teatteri = teatterit.get(1);
+		salit = teatteri.annaSalit().size();
+		int aika;
+		for(int i=0; i<salit; i++){
+			aika = 1;
+			for(int j =4; j<8; j++){
+			//näytösaikaan lisätään +1, koska sali-luokka lukee sitä luvuilla 1-5
+			teatteri.annaSali(i).lisaaNaytos(new Naytos(2015,3,28,i, teatteri, elokuvat.get(j), aika));
+			aika ++;
+			}
+		}
+		//arska 5-10 teatteri 3:n
+		teatteri = teatterit.get(2);
+		salit = teatteri.annaSalit().size();	
+		for(int i=0; i<salit; i++){
+			aika = 1;
+			for(int j =8; j<10; j++){
+			//näytösaikaan lisätään +1, koska sali-luokka lukee sitä luvuilla 1-5
+			teatteri.annaSali(i).lisaaNaytos(new Naytos(2015,3,28,i, teatteri, elokuvat.get(j), aika));
+			aika++;
+			}
+		}
+		
+		if(verbose){
+			if(verbose){System.out.println("Luokka: GUI : lisaaNaytokset() - kaikki näytökset:");}
+			
+			ArrayList<Naytos> naytokset = new ArrayList<Naytos>();
+			for(int i=0; i<teatterit.size(); i++){
+				naytokset.addAll(teatterit.get(i).annaNaytokset());
+			}
+			for(int i=0; i<naytokset.size(); i++){
+				System.out.println(naytokset.get(i).toString());
+			}
+		}
 	}
 
 	/**TESTAUKSEEN

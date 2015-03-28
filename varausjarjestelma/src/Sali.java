@@ -161,7 +161,7 @@ public class Sali {
 
 		//saman näytösajan muut näytökset
 		int naytosPaikka = naytos.annaNaytosPaikka();		
-		System.out.println("näytöksen näytöspaikka on: "+naytosPaikka);
+		if(verbose){System.out.println("Luokka: Sali : lisaaNaytos() - näytöksen näytöspaikka on: "+naytosPaikka);}
 
 		//samanpaikannäytökset
 		ArrayList<Naytos> samanPaikanNaytokset = naytokset.get(naytosPaikka-1);
