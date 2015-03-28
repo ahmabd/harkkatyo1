@@ -54,6 +54,7 @@ public class GUI {
 	private static ArrayList<Elokuva> elokuvat;
 	private JList<Elokuva> elokuvaLista;
 	private static ArrayList<Teatteri> teatterit;
+	private JList <Teatteri> teatteriLista;
 	//varaukset TODO
 
 	/**
@@ -124,20 +125,10 @@ public class GUI {
 		//paivittaa teatterit
 		paivitaTeatterit(teatterit, panel);
 
-		MouseListener listener = new MouseAdapter(){
-			public void mouseClicked(MouseEvent e){
-				elokuvaLista = (JList) e.getSource();
+		lisaaElokuvaHiiri();
+		lisaaTeatteriHiiri();
 
-				int index = elokuvaLista.locationToIndex(e.getPoint());
-				if(e.getClickCount() ==2){
-					if(index >= 0){
-						Elokuva el = elokuvaLista.getModel().getElementAt(index);
-						System.out.println("Klikattu: "+ el.toString());
-					}
-				}
-			}
-		};
-		elokuvaLista.addMouseListener(listener);
+
 
 
 
@@ -253,14 +244,59 @@ public class GUI {
 		panel_2.add(separator);
 	}
 
+	public void lisaaTeatteriHiiri(){
+		if(verbose){System.out.println("Luokka: GUI : lisaaTeatteriHiiri()");}
+
+		MouseListener listener = new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+				teatteriLista = (JList) e.getSource();
+
+				int index = teatteriLista.locationToIndex(e.getPoint());
+				if(e.getClickCount() ==2){
+					if(index >= 0){
+						Teatteri te = teatteriLista.getModel().getElementAt(index);
+						if(verbose){System.out.println("Luokka: GUI : lisaaTeatteriHiiri() - Klikattu: \n"+ te.toString());}
+					}
+				}
+			}
+		};
+		teatteriLista.addMouseListener(listener);
+	}
+	/**
+	 * Lisaa MouseListenerin elokuva-listaan etusivulle
+	 */
+	public void lisaaElokuvaHiiri(){
+		if(verbose){System.out.println("Luokka: GUI : lisaaElokuvaHiiri()");}
+
+		MouseListener listener = new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+				elokuvaLista = (JList) e.getSource();
+
+				int index = elokuvaLista.locationToIndex(e.getPoint());
+				if(e.getClickCount() ==2){
+					if(index >= 0){
+						Elokuva el = elokuvaLista.getModel().getElementAt(index);
+						if(verbose){System.out.println("Luokka: GUI : lisaaTeatteriHiiri() - Klikattu: \n"+ el.toString());}
+						
+					}
+				}
+			}
+		};
+		elokuvaLista.addMouseListener(listener);
+	}
+	/**
+	 * Paivittaa teatterit etusivu-välilehden listaan
+	 * @param teatterit
+	 * @param panel
+	 */
 	public void paivitaTeatterit(ArrayList<Teatteri> teatterit, JPanel panel){
 		if(verbose){System.out.println("Luokka: GUI : paivitaTeatterit()");}
 
 		//teatterilistaa 
-		JList<Teatteri> list = new JList<Teatteri>();
-		list = new JList(teatterit.toArray());	
-		list.setBounds(232, 40, 184, 251);
-		panel.add(list);
+
+		teatteriLista = new JList(teatterit.toArray());	
+		teatteriLista.setBounds(232, 40, 184, 251);
+		panel.add(teatteriLista);
 
 	}
 	/**
@@ -271,7 +307,7 @@ public class GUI {
 	public void paivitaElokuvat(ArrayList<Elokuva> elokuvat, JPanel panel){
 		if(verbose){System.out.println("Luokka: GUI : paivitaElokuvat()");}
 		//elokuvalistaa tähän
-		JList<Elokuva> list = new JList<Elokuva>();
+
 		elokuvaLista =  new JList(elokuvat.toArray());
 		elokuvaLista.setBounds(20, 40, 184, 251);
 		panel.add(elokuvaLista);
