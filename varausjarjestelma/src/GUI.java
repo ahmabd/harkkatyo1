@@ -34,9 +34,11 @@ public class GUI {
 	private JTextField textField_3;
 	private JPasswordField passwordField_1;
 
+	
 	/**
 	 * Launch the application.
 	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

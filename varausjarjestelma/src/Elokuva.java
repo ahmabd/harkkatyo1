@@ -20,26 +20,40 @@ public class Elokuva{
 		if(verbose){System.out.println("Luokka: Elokuva : annaNimi()");}
 		return nimi;
 	}
-	
+
 	public int annaKesto(){
 		if(verbose){System.out.println("Luokka: Elokuva : annaKesto()");}	
-		
+
 		return kesto;
 	}
-	
+
 	public void asetaNimi(String nimi){
 		if(verbose){System.out.println("Luokka: Elokuva : asetaNimi() - String:"+nimi);}
 		this.nimi = nimi;
 	}
-	
+
 	public void asetaKesto(int kesto){
 		if(verbose){System.out.println("Luokka: Elokuva : asetaKesto() - int:"+kesto);}
 		this.kesto = kesto;
 	}
 	//-----------------------------------------
-	
+
 	public String toString(){
 		if(verbose){System.out.println("Luokka: Elokuva : toString()");}
-		return("Nimi: " + nimi + ",Kesto: " + kesto);		
+		return("Nimi: " + nimi + ", Kesto: " + kesto);		
+	}
+
+	public boolean equals(Elokuva verrattava){
+		if(verbose){System.out.println("Luokka: Elokuva : equals()");}
+
+		//jos kaikki attribuutit t‰sm‰‰v‰t, palauttaa true
+		if(nimi.equals(verrattava.annaNimi()) &&
+				kesto == verrattava.annaKesto()){
+			if(verbose){System.out.println("Luokka: Elokuva : equals() - verrattava sama!");}
+			return true;
+		}
+
+		if(verbose){System.out.println("Luokka: Elokuva : equals() - verrattava eri!");}
+		return false;
 	}
 }
