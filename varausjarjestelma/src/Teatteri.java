@@ -106,7 +106,7 @@ public class Teatteri {
 	 * @param elokuvat : ArrayList<Elokuva>
 	 * @return boolean
 	 */
-	private boolean loytyykoElokuva(Elokuva elokuva, ArrayList<Elokuva> elokuvat){
+	public boolean loytyykoElokuva(Elokuva elokuva, ArrayList<Elokuva> elokuvat){
 		if(verbose){System.out.println("Luokka: Teatteri : loytyykoElokuva()");}
 		
 		//jos elokuva jo listassa, palauttaa true
@@ -120,6 +120,8 @@ public class Teatteri {
 		if(verbose){System.out.println("Luokka: Teatteri : loytyykoElokuva() - elokuvaa ei listassa");}
 		return false;
 	}
+	
+	
 	/**
 	 * palauttaa kaikki teatterin näytökset
 	 * @return ArrayList<Naytos>
