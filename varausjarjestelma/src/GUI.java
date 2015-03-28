@@ -102,7 +102,7 @@ public class GUI {
 		Kirjaudu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Kirjaudu.getContentPane().setLayout(null);
 
-		JLabel label = new JLabel("Ict Elokuvateatteri");
+		JLabel label = new JLabel("ICT-Elokuvateatteri");
 		label.setBounds(188, 6, 185, 26);
 		label.setFont(new Font("Lucida Grande", Font.PLAIN, 21));
 		Kirjaudu.getContentPane().add(label);
@@ -247,16 +247,16 @@ public class GUI {
 		panel.removeAll();						
 		panel.repaint();
 		
-		JLabel lblValitse = new JLabel("Tervetuloa ICT Elokuvateatteriin! Alla voit selata elokuvia ja niiden esityspaikkoja!");
-		lblValitse.setBounds(20, 10, 500, 16);
+		JLabel lblValitse = new JLabel("<html>Tervetuloa ICT-Elokuvateatteriin! Alla voit selata elokuvia ja niiden esityspaikkoja!<br>Meillä on tarjolla jokaiselle jotakin!</html>");
+		lblValitse.setBounds(20, 0, 500, 50);
 		panel.add(lblValitse);
 
 		JLabel lblElokuvat = new JLabel("Elokuvat:");
-		lblElokuvat.setBounds(20, 40, 81, 16);
+		lblElokuvat.setBounds(20, 50, 81, 16);
 		panel.add(lblElokuvat);
 
 		JLabel lblElokuvateatteri = new JLabel("Elokuvateatterit:");
-		lblElokuvateatteri.setBounds(232, 40, 101, 16);
+		lblElokuvateatteri.setBounds(232, 50, 101, 16);
 		panel.add(lblElokuvateatteri);
 
 		//paivittaa elokuvat
