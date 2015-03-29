@@ -1,15 +1,19 @@
+import java.util.ArrayList;
+
 
 //TODO testaa!
 public class Asiakas extends Kayttaja {
 
 	//testaukseen
-	private boolean verbose = true;
+	private boolean verbose = true;	
 	
+	
+	private ArrayList<Varaus> varaukset;
 	
 
 
-	public Asiakas(String nimi, String salasana, String kayttajanimi){
-		super(nimi, salasana, kayttajanimi);	
+	public Asiakas(String nimi, String salasana, String kayttajanimi, int ID){
+		super(nimi, salasana, kayttajanimi, ID);	
 		if(verbose){System.out.println("Luokka: Asiakas : Konstruktori");}
 	}
 	
@@ -24,4 +28,12 @@ public class Asiakas extends Kayttaja {
 		return false;
 	}
 
+	/**
+	 * Lisaa varauksen asiakkaan tietoihin
+	 * @param varaus
+	 */
+	public void lisaaVaraus(Varaus varaus){
+		if(verbose){System.out.println("Luokka: Asiakas : lisaaVaraus()");}
+		varaukset.add(varaus);
+	}
 }

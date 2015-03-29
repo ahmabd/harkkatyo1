@@ -61,8 +61,11 @@ public class GUI {
 	private static ArrayList<Teatteri> teatterit;
 	private JList <Teatteri> teatteriLista;
 	//varaukset & kayttajat
-	private ArrayList<Kayttaja> kayttajat;
-	private ArrayList<Varaus> varaukset;
+	private static ArrayList<Kayttaja> kayttajat;
+	private static ArrayList<Varaus> varaukset;
+	
+	//aina kayttajaa luodessa tulee lisata ID:n arvoa yhdella!!!
+	private static int kayttaja_ID;
 
 	private JPanel etusivu;
 	private JPanel varaussivu;
@@ -78,11 +81,15 @@ public class GUI {
 
 	public static void main(String[] args) {
 		if(verbose){System.out.println("Luokka: GUI : main()");}
-
+		
+		// TODO - lukee tiedostoista 
+		
 		/*TODO tarkistus -> jos ei ole aikaisempia kirjoitettuja Teatteri-olioita ajetaan alusta - metodi
 		 * Kaytannossa varmaan try(*lue filut*)catch(*ei aikaisemmin tallennettuja filuja joten alustus*)
 		 * Ohjelman lopettamisen yhteydessä
 		*/alusta();
+		
+		//TODO - seivaus
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -92,8 +99,10 @@ public class GUI {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
 			}
 		});
+		
 	}
 
 	/**
@@ -102,6 +111,8 @@ public class GUI {
 	public GUI() {
 		if(verbose){System.out.println("Luokka: GUI : konstruktori()");}
 		initialize();
+		
+		
 
 
 	}
@@ -230,7 +241,7 @@ public class GUI {
 		if(yllapitaja == true){
 			hallintapaneeli = new JPanel();
 			tabbedPane.addTab("Hallintapaneeli", null, hallintapaneeli, null);
-			varaussivu.setLayout(null);
+			hallintapaneeli.setLayout(null);
 		}
 		
 		//vain jos kukaan ei ole vielä kirjautunut
@@ -439,8 +450,13 @@ public class GUI {
 	 */
 	private static void alusta(){
 		if(verbose){System.out.println("Luokka: GUI : alusta()");}
-
+		
+		//Alustetaan listat
 		elokuvat = new ArrayList<Elokuva>();
+		teatterit = new ArrayList<Teatteri>();
+		kayttajat = new ArrayList<Kayttaja>();
+		varaukset = new ArrayList<Varaus>();
+		
 		//elokuvat
 		Elokuva elokuva;
 		for(int i=0; i<10; i++){
@@ -450,8 +466,8 @@ public class GUI {
 		if(verbose){
 			System.out.println("Luokka: GUI : alusta() - elokuvat:");
 			tulostaElokuvat(elokuvat);}
-		//teatterit
-		teatterit = new ArrayList<Teatteri>();
+		
+		//teatterit		
 		Teatteri teatteri;
 		for(int i=0; i<3;i++){
 			teatteri = new Teatteri("Teatteri"+(i+1),"Turku",2);
@@ -469,6 +485,21 @@ public class GUI {
 		}
 		if(verbose){tulostaTeatterit(teatterit);}
 		lisaaNaytokset();
+		
+		kayttaja_ID = 1;
+		if(verbose){System.out.println("kayttaja_ID: "+kayttaja_ID);}
+		
+		//luodaan yksi yllapitaja nimi Admin, salasana admin, kayttajanimi Admin1
+		kayttajat.add(new Yllapitaja("Admin", "admin", "Admin1", kayttaja_ID));
+		if(verbose){System.out.println(kayttajat.get(0).toString());}
+		kayttaja_ID++;
+		if(verbose){System.out.println("kayttaja_ID: "+kayttaja_ID);}
+		
+		//luodaan yksi asiakas nimi Asiakas, salasana Asiakas, kayttajanimi esimerkkiAsiakas
+		kayttajat.add(new Asiakas("Asiakas", "asiakas","esimerkkiAsiakas",kayttaja_ID));
+		if(verbose){System.out.println(kayttajat.get(1).toString());}
+		kayttaja_ID++;
+		if(verbose){System.out.println("kayttaja_ID: "+kayttaja_ID);}
 
 	}
 

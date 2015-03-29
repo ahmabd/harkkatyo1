@@ -1,23 +1,30 @@
+import java.util.ArrayList;
 
-public class Kayttaja {
+
+public abstract class Kayttaja {
 	//testaukseen
 	private boolean verbose = true;
-	
+
 	private String nimi;
 	private String salasana;
 	private String kayttajanimi;
-	
-	public Kayttaja(String nimi, String salasana, String kayttajanimi){
+
+	private int ID;
+
+
+	public Kayttaja(String nimi, String salasana, String kayttajanimi, int ID){
 		if(verbose){System.out.println("Luokka: Kayttaja : Konstruktori");}
-		
+
 		this.nimi = nimi;
 		this.salasana = salasana;
 		this.kayttajanimi = kayttajanimi;
+		
+		this.ID = ID;
 	}
-	
+
 	//----------------------------------------------------------------------------------------
 	//getterit ja setterit
-	
+
 	public String annaNimi(){
 		if(verbose){System.out.println("Luokka: Kayttaja : annaNimi()");}
 
@@ -33,7 +40,7 @@ public class Kayttaja {
 
 		return kayttajanimi;
 	}
-	
+
 	public void asetaNimi(String nimi){
 		if(verbose){System.out.println("Luokka: Kayttaja : asetaNimi()");}
 
@@ -50,4 +57,18 @@ public class Kayttaja {
 		this.kayttajanimi = kayttajanimi;
 	}
 
+	//---------------------------------------------------------------------
+
+	public abstract boolean onkoAsiakas();
+
+	public abstract boolean onkoYllapitaja();
+
+	public String toString(){
+		return nimi+", "+
+				salasana+", "+
+				kayttajanimi+", "+
+				ID+", "+
+				"Asiakas: "+onkoAsiakas()+
+				", Yllapitaja: "+onkoYllapitaja();
+	}
 }
